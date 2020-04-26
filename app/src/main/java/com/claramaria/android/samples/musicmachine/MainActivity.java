@@ -3,6 +3,7 @@ package com.claramaria.android.samples.musicmachine;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final DownloadThread thread = new DownloadThread();
+        thread.setName("DownloadThread");
+        thread.start();
+
         mDownloadButton = findViewById(R.id.downloadButton);
 
         mDownloadButton.setOnClickListener(new View.OnClickListener() {
@@ -24,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
 
-                Thread thread = new DownloadThread();
-                thread.setName("DownloadThread");
-                thread.start();
+                // Send messages to Handler for processing
+                for (String song : PlayList.songs) {
+                    Message message = Message.obtain();
+                    message.obj = song;
+                    thread.mHandler.sendMessage(message);
+                }
             }
         });
     }
