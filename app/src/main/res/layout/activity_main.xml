@@ -12,8 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="161dp"
-        android:layout_marginRight="161dp"
-        android:layout_marginBottom="78dp"
+        android:layout_marginBottom="24dp"
         android:text="Download" />
+
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/downloadButton"
+        android:layout_centerHorizontal="true"
+        android:text="Play" />
 </RelativeLayout>
