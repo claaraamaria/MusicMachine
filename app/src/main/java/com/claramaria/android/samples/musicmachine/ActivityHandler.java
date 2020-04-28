@@ -4,8 +4,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 
-import androidx.annotation.NonNull;
-
 public class ActivityHandler extends Handler {
     private MainActivity mMainActivity;
 
@@ -14,7 +12,7 @@ public class ActivityHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(@NonNull Message msg) {
+    public void handleMessage(Message msg) {
         if (msg.arg1 == 0) {
             // Music is NOT playing
             if (msg.arg2 == 1) {
@@ -50,3 +48,4 @@ public class ActivityHandler extends Handler {
         }
     }
 }
+

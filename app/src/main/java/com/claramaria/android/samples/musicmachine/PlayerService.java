@@ -1,20 +1,24 @@
 package com.claramaria.android.samples.musicmachine;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Binder;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.claramaria.android.samples.musicmachine.models.Song;
+
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
+    private static final int REQUEST_OPEN = 99;
+
     private MediaPlayer mPlayer;
-    public Messenger mMessanger = new Messenger(new PlayerHandler(this));
+    public Messenger mMessenger = new Messenger(new PlayerHandler(this));
 
     @Override
     public void onCreate() {
@@ -24,8 +28,24 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification.Builder notificationBuilder = new Notification.Builder(this);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        String title = "";
+        String artist = "";
+
+        if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null) {
+            Song song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+            title = song.getTitle();
+            artist = song.getArtist();
+        }
+
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                REQUEST_OPEN, mainIntent, 0);
+
+        Notification.Builder notificationBuilder = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_queue_music_white)
+                .setContentTitle(title)
+                .setContentText(artist)
+                .setContentIntent(pendingIntent);
         Notification notification = notificationBuilder.build();
         startForeground(11, notification);
 
@@ -43,7 +63,7 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return mMessanger.getBinder();
+        return mMessenger.getBinder();
     }
 
     @Override
